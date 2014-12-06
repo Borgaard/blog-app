@@ -16,8 +16,8 @@ To-do:
 
 Things that are quirky or working as of `fe6bd23` 
 * Add score: 5/5
- */posts/new -> redirect to /posts -> method POST
+ * posts/new -> hit submit -> redirect to /posts -> method POST
 * Edit score: 4/5 because why id?_method=PATCH
  * posts/id -> hit edit -> posts/id/edit -> redirect to /post/id -> id?_method=PATCH
 * Delete score: 4/5 because why id?_method=DELETE
- */posts/id -> hit delete -> redirected to /posts -> id?_method=DELETE 
+ * posts/id -> hit delete -> redirect to /posts -> id?_method=DELETE 
