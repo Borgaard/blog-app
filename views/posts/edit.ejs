@@ -1,13 +1,14 @@
 <html>
 <head>
-	<title>Edit <%= title.name %></title>
+	<title>Edit <%= posts.topic %></title>
 </head>
 <body>
-	<h1>Edit <%= title.name %></h1>
+	<h1>Edit <%= posts.topic %></h1>
 	<form action="/posts/<%= posts.id %>?_method=PATCH" method="POST">
-		<input type="text" name="title"  placeholder="Title"  value="<%= posts.title %>">
-		<input type="text" name="body"   placeholder="Body"   value="<%= posts.body  %>">
-		<input type="text" name="time"   placeholder="Time"   value="<%= posts.time  %>">
+		<input type="text" name="topic"    placeholder="Topic"      value="<%= posts.topic %>">
+		<input type="text" name="mainbody" placeholder="MainBody"   value="<%= posts.mainbody %>">
+		<input type="text" name="time"     placeholder="Time"       value="<%= posts.time  %>">
+		<input type="text" name="day"      placeholder="Day"        value="<%= posts.day %>">
 		<input type="submit">
 	</form>
 </body>

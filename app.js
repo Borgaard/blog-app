@@ -5,12 +5,13 @@ var ejs        = require('ejs');
 var app        = express();
 var db         = require('./db.js');
 var bodyParser = require('body-parser')
-// var path       = require('path')
+var path       = require('path')
 app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, "views"))
+app.set('views', path.join(__dirname, "views"))
 app.use(methodOverride('_method'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+
 
 //Listen on port 8080
 app.listen(8080);
@@ -19,28 +20,72 @@ app.listen(8080);
 console.log("Running on 8080!");
 
 app.get('/posts/new', function(req, res) {
-	//console.log(req.url)
-	res.render('/posts/new')
+	// console.log(req.url)
+	res.render('posts/new')
 });
 
 //Set up routes, requests and responses
 app.get('/', function(req, res) {
+	//server renders index when receive request
 	res.render('index');
 });
 
+app.get('/posts', function(req, res) {
+	db.query("SELECT * from posts;", function(err, dbRes) {
+		if(!err) {
+			res.render('posts/index', {posts: dbRes.rows});
+		}
+	});
+});
+
 app.get('/posts/:id', function(req, res) {
-	console.log("got to posts id!")
-})
+	db.query("SELECT * FROM posts WHERE id =$1", [req.params.id], function(err, dbRes) {
+		if(!err) {
+			res.render('posts/show', {posts: dbRes.rows[0]});
+		} else {
+			console.log(err);
+		}
+	})
+});
 
+app.post('/posts', function(req, res) {
+	db.query("INSERT INTO posts (topic, mainbody, comments, day) VALUES ($1, $2, $3, $4)", [req.body.topic, req.body.mainbody, req.body.comments, req.body.day], function(err, dbRes) {
+		if (!err) {
+			res.redirect('/posts');
+		} else {
+			console.log(err);
+		}
+	});
+});
 
+app.get('/posts/:id/edit', function(req, res) {
+	db.query("SELECT * FROM posts WHERE id = $1", [req.params.id], function(err, dbRes) {
+		if(!err) {
+			res.render('posts/edit', {posts: dbRes.rows[0]});
+		} else {
+			console.log(err);
+		}
+	});
+});
 
+//Edit posts
+app.patch('/posts/:id', function(req, res) {
+	db.query("UPDATE posts SET topic = $1, mainbody = $2, comments = $3, day = $4 WHERE id = $5", [req.body.topic, req.body.mainbody, req.body.comments, req.body.day, req.params.id], function(err, dbRes) {
+		if(!err) {
+			res.redirect('/posts/' + req.params.id);
+		} else {
+			console.log(err);
+		}
+	});
+});
 
-
-
-
-
-
-
+app.delete('/posts/:id', function(req, res) {
+	db.query("DELETE FROM posts WHERE id = $1", [req.params.id], function(err, dbRes) {
+		if(!err) {
+			res.redirect('/posts');
+		}
+	})
+});
 
 
 

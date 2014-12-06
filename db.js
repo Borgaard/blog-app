@@ -4,7 +4,7 @@ var pg      = require('pg');
 var db = {};
 
 db.config = {
-  database: "people",
+  database: "blog",
   port: 5432,
   host: "localhost"
 };
