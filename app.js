@@ -49,7 +49,7 @@ app.get('/posts/:id', function(req, res) {
 });
 
 app.post('/posts', function(req, res) {
-	db.query("INSERT INTO posts (topic, mainbody, comments, day) VALUES ($1, $2, $3, $4)", [req.body.topic, req.body.mainbody, req.body.comments, req.body.day], function(err, dbRes) {
+	db.query("INSERT INTO posts (topic, mainbody, comments, postday) VALUES ($1, $2, $3, now())", [req.body.topic, req.body.mainbody, req.body.comments], function(err, dbRes) {
 		if (!err) {
 			res.redirect('/posts');
 		} else {
@@ -68,9 +68,20 @@ app.get('/posts/:id/edit', function(req, res) {
 	});
 });
 
+//comments
+app.patch('/posts/:id', function(req, res) {
+	db.query("UPDATE posts SET topic = $1, mainbody = $2, comments = $3 WHERE id = $4", [req.body.topic, req.body.mainbody, req.body.comments, req.params.id], function(err, dbRes) {
+		if(!err) {
+			res.redirect('/posts/' + req.params.id);
+		} else {
+			console.log(err);
+		}
+	});
+});
+
 //Edit posts
 app.patch('/posts/:id', function(req, res) {
-	db.query("UPDATE posts SET topic = $1, mainbody = $2, comments = $3, day = $4 WHERE id = $5", [req.body.topic, req.body.mainbody, req.body.comments, req.body.day, req.params.id], function(err, dbRes) {
+	db.query("UPDATE posts SET topic = $1, mainbody = $2, comments = $3 WHERE id = $4", [req.body.topic, req.body.mainbody, req.body.comments, req.params.id], function(err, dbRes) {
 		if(!err) {
 			res.redirect('/posts/' + req.params.id);
 		} else {
